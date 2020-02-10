@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from fbprophet import Prophet
 
-df_train = pd.read_csv('./中国.csv', parse_dates=['timestamp'])
+df_train = pd.read_csv('./data_new/中国.csv', parse_dates=['timestamp'])
 df_train['timestamp'] = df_train['timestamp'].apply(lambda ts:pd.Timestamp(int(ts), unit='ms'))
 #df_train.sort_values(['timestamp'],inplace=True)
 
