@@ -6,3 +6,4 @@
 - Data file name is chinese, translate to en with cn_2_en.py script.
 - source.py script work for data catch.
 - predict_with_prophet.py script work for predict people count with Porphet.
+- Data source: 丁香园-人民日报.
