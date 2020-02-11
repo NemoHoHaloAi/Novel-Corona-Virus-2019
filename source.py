@@ -43,5 +43,5 @@ while(True):
             	    os.system('echo '+row+' >> data_new/'+_fn)
     except Exception as e:
         print(e)
-        pass
+
     time.sleep(60*10) # 10分钟flush一次
