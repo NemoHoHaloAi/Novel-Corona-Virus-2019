@@ -29,9 +29,9 @@ df_test['ds'] = pd.date_range(start=df_train_confirmed.ds.max(), freq="H", perio
 
 m = Prophet()
 #m.fit(df_train_confirmed)
-#m.fit(df_train_suspected)
+m.fit(df_train_suspected)
 #m.fit(df_train_dead)
-m.fit(df_train_cured)
+#m.fit(df_train_cured)
 
 forecast = m.predict(pd.concat([df_train_confirmed[['ds']],df_test[['ds']]]))
 
