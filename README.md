@@ -1,5 +1,6 @@
 # Wuhan Novel Corona Virus 2019
 
+- [cnblog](https://www.cnblogs.com/helongBlog/p/12287637.html)
 - from 2020/02/05 to now, updating....
 - Just in China, every city in every province.
 - Every 10min or more to catch data, it depends data is or not change.
