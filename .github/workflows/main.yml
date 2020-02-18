@@ -1,4 +1,4 @@
-name: CI
+name: WeatherGetter
 
 on: [push]
 
@@ -16,4 +16,4 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Get weather infomation
-      run: curl wttr.in
+      run: curl wttr.in/shenzhen
