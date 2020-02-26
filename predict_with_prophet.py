@@ -28,8 +28,8 @@ df_test = pd.DataFrame({})
 df_test['ds'] = pd.date_range(start=df_train_confirmed.ds.max(), freq="H", periods=24)
 
 m = Prophet()
-#m.fit(df_train_confirmed)
-m.fit(df_train_suspected)
+m.fit(df_train_confirmed)
+#m.fit(df_train_suspected)
 #m.fit(df_train_dead)
 #m.fit(df_train_cured)
 
