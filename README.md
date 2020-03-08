@@ -1,4 +1,4 @@
-# Wuhan Novel Corona Virus 2019
+# Novel Corona Virus 2019
 
 - [CNBlog](https://www.cnblogs.com/helongBlog/p/12287637.html)
 - from 2020/02/05 to now, updating....
