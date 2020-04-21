@@ -2,7 +2,7 @@
 
 - [CNBlog](https://www.cnblogs.com/helongBlog/p/12287637.html)
 - from 2020/02/05 to now, updating....
-- Just in China, every city in every province.
+- Only China, every city in every province.
 - Every 10min or more to catch data, it depends data is or not change.
 - Data file name is chinese, translate to en with cn_2_en.py script.
 - source.py script work for data catch.
