@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aGf0sLjv7DOonc61fINdATGez2d3O8xB"></script>
+		<style type="text/css">
+			body,html {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				font-family: "微软雅黑";
+			}
+			#map_canvas {
+				width: 100%;
+				height: 600px;
+			}
+			
+			.button {
+				background-color: #4CAF50; /* Green */
+				border: none;
+				color: white;
+				padding: 8px 0px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 13px;
+				margin: 4px 2px;
+				-webkit-transition-duration: 0.3s; /* Safari */
+				transition-duration: 0.3s;
+				cursor: pointer;
+				border-radius: 4px;
+				width: 63px;
+				hight: 4px;
+			}
+			
+			.button1 {
+				background-color: white; 
+				color: black; 
+				border: 2px solid #4CAF50;
+			}
+			
+			.button1:hover {
+				background-color: #4CAF50;
+				color: white;
+			}
+			
+			.btn-info {
+				background-color: #5bc0de;
+				color: #fff;
+				border-color: #46b8da;
+			}
+			
+			.btn-info:hover {
+				background-color: #337ab7;
+				color: #fff;
+				border-color: #2e6da4;
+			}
+			
+		</style>
+	</head>
+	<body style="position: relative;">
+		<div style="text-align: center;">
+			<p>请输入坐标轨迹(<font color="#c2c2c2">如:["113.897703,22.563978","113.897405,22.564314"]</font>):</p> 
+			<textarea cols="5" id="text" style="margin-top:10px 10%;height:130px;width:80%;"></textarea></br>
+			<input type="radio" name="radio2" value="1" checked>画线</input>
+			<input type="radio" name="radio2" value="2">画点</input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			
+			<input type="radio" name="radio" value="1" checked>GCJ02</input>
+			<input type="radio" name="radio" value="2">百度</input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="button btn-info" onclick="run();">执行</button>
+		</div>
+		
+		<div id="map_canvas" style="margin-top:50px"></div>
+		
+		<script>
+			
+			var result = new Array();
+			var points = [];
+			//地图初始化
+			var convertor = new BMap.Convertor();
+			
+			var brush_type=null;   //  brush_type为radio中选中的值:1为画线,2为画点
+			
+			//画线
+			function paint(PointArr){
+				var map = new BMap.Map('map_canvas');
+				map.enableScrollWheelZoom();
+
+				map.centerAndZoom(PointArr[0], 13);
+					
+				map.addOverlay(new BMap.Polyline(PointArr, {strokeColor: '#f44336'}));
+				map.setViewport(PointArr);
+						
+				var lushu = new BMapLib.LuShu(map,PointArr,{
+					autoView:true,//是否开启自动视野调整，如果开启那么路书在运动过程中会根据视野自动调整
+					icon  : new BMap.Icon('http://lbsyun.baidu.com/jsdemo/img/car.png', new BMap.Size(52,26),{anchor : new BMap.Size(27, 13)}),
+					speed: 4500,
+					enableRotation:true//是否设置marker随着道路的走向进行旋转
+				});
+			}
+			
+			//画点
+			function paint2(PointArr){
+				var map = new BMap.Map("map_canvas");
+				map.centerAndZoom(PointArr[0], 17);
+				map.enableScrollWheelZoom();
+				//var myGeo = new BMap.Geocoder();
+				for(var i = 0; i<PointArr.length; i++){
+					var marker = new BMap.Marker(PointArr[i]);
+					map.addOverlay(marker);
+					marker.setLabel(new BMap.Label((i+1),{offset:new BMap.Size(20,-10)}));//标识每个点的顺序
+				}
+			}
+			
+			
+			
+			function run(){
+				//1.选择画点还是线
+				var radio2=document.getElementsByName("radio2");
+				
+				for(var i=0;i<radio2.length;i++){
+					if(radio2[i].checked==true) {
+						 brush_type=radio2[i].value;
+						 break;
+				    }
+				}
+				
+				//2.选择坐标系
+				var radio=document.getElementsByName("radio");
+				var coord_type=null;   //  coord_type为radio中选中的值:1为火星,2为百度
+				for(var i=0;i<radio.length;i++){
+					if(radio[i].checked==true) {
+						 coord_type=radio[i].value;
+						 break;
+				    }
+				}
+				
+			
+				result = new Array();
+				
+				points = [];
+				var text = document.getElementById("text").value;
+				
+				if (text.search('\"') != -1) {
+					text = text.replace(/\"/g, '\'');
+				}
+				
+				var str = text.replace(/\s+/g,"").split(']');
+				for(var i=0;i<str.length-1;i++){
+					var aaa = str[i].substr(1).split('\',\'');
+					for(var j=0;j<aaa.length;j++){
+						if(j===0){
+							aaa[j] = aaa[0].substr(1);
+						}
+						if(j===(aaa.length-1)){
+							aaa[j] = aaa[j].substring(0,aaa[j].length-1);
+						}
+						var xy = aaa[j].split(',');
+						points.push(new BMap.Point(parseFloat(xy[0]),parseFloat(xy[1])));
+					}
+				}
+				//地图初始化
+				//var convertor = new BMap.Convertor();
+				
+				if (coord_type == 1) {
+					convert(points);
+				} else if (coord_type == 2) {
+					if (brush_type == 1) {
+						paint(points);
+					} else if (brush_type == 2) {
+						paint2(points);
+					}
+				}
+				
+				
+				/**
+				for(var i=0,len=points.length;i<len;i+=10){
+					
+					if ((i+10)>points.length) {
+						//points.slice(i,i+points.length-i) 每十个进行一次转换
+						convertor.translate(points.slice(i,i+points.length-i),3,5,translateCallback);
+						flag = true;
+					}else{
+						//points.slice(i,i+10);
+						//convertor.translate(points,3,5,translateCallback);
+						convertor.translate(points.slice(i,i+10),3,5,translateCallback);
+					}
+				}
+				*/
+				//坐标转化
+				//convertor.translate(points,3,5,translateCallback);
+				
+				
+				
+			
+			}
+			
+			translateCallback = function (data){
+				if(data.status === 0){
+					for(var i=0;i<data.points.length;i++){
+						result.push((data.points)[i]);
+					}
+				}
+				//paint(data.points);
+			}
+			
+			
+			
+			
+			function convert(array){
+				if (array.length>10) {
+					var a = array.slice(0,10);
+					points = array.slice(10,array.length);
+					convertor.translate(a,3,5,translateCallback);
+					
+				} else if(array.length != 0){
+					points = [];
+					convertor.translate(array,3,5,translateCallback);
+					
+				}
+				
+			}
+			
+			translateCallback = function (data){
+				debugger
+				if(data.status === 0){
+					for(var i=0;i<data.points.length;i++){
+						result.push((data.points)[i]);
+					}
+				}
+				if(points.length > 0){
+					convert(points);
+				}else{
+					if (brush_type == 1) {
+						paint(result);
+					} else if (brush_type == 2) {
+						paint2(result);
+					}
+				}
+				
+				//paint(data.points);
+			}
+			
+			
+			
+
+			
+			
+		</script>
+	</body>
+</html>
